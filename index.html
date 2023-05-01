@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"> -->
+    <link href="./styles.css" rel="stylesheet">
+    <title></title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+  
+      .box {
+        width: 100%;
+        background-color: seashell;
+        padding-bottom: 20px;
+      }
+  
+      .bar {
+        height: 40px;
+        box-shadow: 0 1 5px 0px #333;
+        border-bottom: 1px solid #ccc;
+      }
+  
+      .titleBar {
+        width: 190px;
+        float: left;
+        height: 40px;
+        margin-left: 10px;
+      }
+  
+      .titleBar div {
+        float: left;
+        height: 40px;
+      }
+  
+      .titleBar .logo {
+        width: 20px;
+        height: 20px;
+        margin-top: 10px;
+        background: url('./lg.ico') 0 0 no-repeat;
+        background-size: cover;
+      }
+  
+      .titleBar .title {
+        margin-left: 10px;
+        font: normal 14px/40px '微软雅黑'
+      }
+  
+      .windowTool {
+        float: right;
+        width: 600px;
+        height: 40px;
+        position: relative;
+      }
+  
+      .windowTool div {
+        float: right;
+        cursor: pointer;
+        margin-right: 20px;
+        font: normal 12px/40px '微软雅黑'
+      }
+
+      .isClose {
+      top: 50%;
+      left: 50%;
+      width: 380px;
+      height: 180px;
+      padding: 10px;
+      position: fixed;
+      display: none;
+      background: #f5f5f5;
+      box-shadow: 0px 1px 5px 0px #ccc;
+      transform: translate(-50%, -50%);
+    }
+
+    .isClose h3 {
+      text-align: center;
+      font: bold 14px/40px '微软雅黑';
+    }
+
+    .isClose p {
+      font: normal 12px/40px '微软雅黑'
+    }
+
+    .close_btn {
+      margin-top: 60px;
+      margin-left: 220px;
+    }
+
+    .close_btn span {
+      float: left;
+      width: 60px;
+      margin-left: 8px;
+      text-align: center;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font: normal 12px/26px '微软雅黑';
+    }
+
+    .close_btn span:nth-child(1) {
+      cursor: pointer;
+      color: #fff;
+      background-color: #7b8c7c;
+    }
+    iframe {
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 50%;
+      position: fixed;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <!-- <div class="bar">
+        <div class="titleBar">
+          <div class="logo"></div>
+          <div class="title">Electron</div>
+        </div>
+        <div class="windowTool">
+          <div class="close">
+            <i class="fa fa-window-close-o" aria-hidden="true"></i>
+          </div>
+          <div class="maxsize">
+            <i class="fa fa-window-maximize" aria-hidden="true"></i>
+          </div>
+          <div class="minisize">
+            <i class="fa fa-minus"></i>
+          </div>
+        </div>
+      </div> -->
+      <div>
+        We are using Node.js <span id="node-version"></span>,
+        Chromium <span id="chrome-version"></span>,
+        and Electron <span id="electron-version"></span>.
+        <br><br>
+        <button id="btn">点击打开新窗口</button>
+        <div>-------------------------------------</div>
+        <br>
+        <button id="addMenu">创建自定义菜单</button>
+        <br><br>
+        <input type="text" placeholder="输入自定义菜单项内容" id="menuCon">
+        <br><br>
+        <button id="addItem">添加菜单项</button>
+        <div>-------------------------------------</div>
+        <br>
+        <button id="renderToAsync">渲染进程到主进程异步操作</button>
+        <br><br>
+        <button id="renderToSync">渲染进程到主进程同步操作</button>
+        <div>-------------------------------------</div>
+        <br>
+        <button id="openOther">渲染进程间通信--打开窗口2</button>
+        <div>-------------------------------------</div>
+        <br>
+        <button id="dialogBtn">显示对话框</button>
+        <br><br>
+        <button id="dialogBtnErr">显示错误对话框</button>
+        <div>-------------------------------------</div>
+        <br>
+        <button id="openUrl">打开URL</button>
+        <br><br>
+        <button id="openFolder">打开目录</button>
+        <br><br>
+        <iframe src="https://www.electronjs.org/zh/" frameborder="0" id="webview"></iframe>
+        <div>-------------------------------------</div>
+        <br>
+        <button id="triggerBtn">基于 H5 实现消息通知 -- 触发消息</button>
+        <div>-------------------------------------</div>
+        <br>
+        <input type="text" class="txt1" placeholder="输入需要复制的内容"> <button id="copyBtn">复制</button>
+        <br><br>
+        <input type="text" class="txt2" placeholder="将内容粘贴至此处"> <button id="pasteBtn">粘贴</button>
+        <br><br>
+        <button id='clipImg'>将图片拷贝至剪切版再粘贴至界面</button>
+      </div>
+      <!-- 定义浮窗设置阻止窗口关闭样式 -->
+      <div class="isClose">
+        <h3>是否关闭当前应用？</h3>
+        <p>系统可能不会保存您的所有更改</p>
+        <p class="close_btn"><span>是</span><span>否</span></p>
+      </div>
+    </div>
+    <script src="index.js"></script>
+
+    <!-- You can also require other files to run in this process -->
+    <script src="./renderer.js"></script>
+  </body>
+</html>
